@@ -9,8 +9,6 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1>Movie Flex</h1>
-        <p >Prepaired by: Jun B. Amaro</p>
 
         @include('partials._nav')
         @if (session('success'))
@@ -19,5 +17,6 @@
 
         @yield('content')
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

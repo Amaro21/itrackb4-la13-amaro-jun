@@ -14,23 +14,39 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
+        $search = $request->query("search");
         $genre_id = $request->query('genre_id');
-        $year     = $request->query('year');
+        $year = $request->query('year');
+        $is_blockbuster = $request->query('is_blockbuster');
+        $sort = $request->query('sort', 'title');
+
+        if (! in_array($sort, ['title', 'year', 'rating'])) {
+            $sort = 'title';
+        }
 
         $genres = Genre::all();
         DB::enableQueryLog();
 
-        $query = Movie::withh('genre');
+        $query = Movie::with('genre');
+
+        if ($search) {
+            $query = $query->where('title', 'like', "%{$search}%");
+        }
+
 
         if ($genre_id) {
             $query = $query->where('genre_id', $genre_id);
+        }
+
+        if ($is_blockbuster !== null && $is_blockbuster !== '') {
+            $query = $query->where('is_blockbuster', $is_blockbuster);
         }
 
         if ($year) {
             $query = $query->where('year', $year);
         }
 
-        $movies = $query->get();
+        $movies = $query->orderBy($sort)->paginate(5)->withQueryString();
 
         return view('movies.index', compact('movies', 'genres', 'genre_id', 'year'));
     }
@@ -101,8 +117,8 @@ class MovieController extends Controller
         $movie->update($validated);
 
         Log::info('Movie updated', [
-            'id'        => $movie-> id,
-            'genre_id'  => $movie-> genre_id,
+            'id' => $movie-> id,
+            'genre_id' => $movie-> genre_id,
         ]);
 
         return redirect()

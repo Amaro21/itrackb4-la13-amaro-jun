@@ -44,6 +44,50 @@
         </div>
     </div>
 
+    <form method="GET" action="{{ route('movies.index') }}" class="row g-2 mb-3">
+        <div class="col-sm-4">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name">
+        </div>
+        <div class="col-sm-2">
+            <select name="genre_id" class="form-select">
+                <option value="">All genres</option>
+                @foreach ($genres as $genre)
+                    <option value="{{ $genre->id }}"
+                        @selected(request('genre_id') == $genre->id)>{{ $genre->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <select name="is_blockbuster" class="form-select">
+                <option value="">Any</option>
+                <option value="1" @selected(request('is_blockbuster') === '1')>YES</option>
+                <option value="0" @selected(request('is_blockbuster') === '0')>NO</option>
+            </select>
+            {{-- <select name="sort" class="form-select">
+                <option value="name" @selected($sort === 'name')>Sort by name</option>
+                <option value="rating" @selected($sort === 'rating')>Sort by rating</option>
+            </select> --}}
+        </div>
+
+        <div class="col-sm-2" class="form-select">
+            <select name="sort" class="form-select">
+                <option value="title"  @selected(request('sort', 'title') === 'title')>Title</option>
+                <option value="year"   @selected(request('sort') === 'year')>Year</option>
+                <option value="rating" @selected(request('sort') === 'rating')>Rating</option>
+            </select>
+        </div>
+
+
+
+
+
+        <div class="col-md-auto">
+            <button class="btn btn-primary">Apply</button>
+            <a href="{{ route('movies.index') }}" class="btn btn-outline-secondary">Clear</a>
+        </div>
+    </form>
+
+
     <table class="table table-striped table-hover table-bordered mt-3">
         <thead class="table-dark">
             <tr>
@@ -89,5 +133,5 @@
         @endforelse
         </tbody>
     </table>
-<p>Queries: {{ count(\Illuminate\Support\Facades\DB::getQueryLog()) }}</p>
+    {{ $movies->links() }}
 @endsection

@@ -1,11 +1,11 @@
-Q1: Route model binding needs two things to be true. Name both, and say what happens when only one of them is.
+Q1: Your HomeController is not a resource controller. Name two things an index() on a resource controller does that yours does not have to.
 
-Answer: Route model binding needs two things. First, the parameter must have the model type, Movie. Second, the name must be $movie, the same as {movie} in my route. If I only use Movie but name it $record, Laravel gives me an empty movie with no data, so my pages show blank values and no error.
+Answer:A resource controller's index() has to load and show a list of records from one table, like all my movies, with paging and filters. It is also one of the seven actions made by Route::resource, so it must use the fixed address /movies and the name movies.index. My HomeController only shows a front page with two counts, so it has to do neither of these, and I chose its address / and its name home myself.
 
-Q2: Your Delete link gave a 404 even though the address was correct. Explain why.
+Q2: Your pagination links lost the search term until you added one method. Say what those links contained before, and what the controller therefore received.
 
-Answer: My Delete link went to /movies/1, which is the right address, but a link can only send GET. In my project, GET at  /movies/1  goes to show(), so instead of a 404 it opened Batman's detail page and nothing was deleted. Only DELETE goes to destroy(), so I changed the link to a form with  @method('DELETE').
+Answer: Before I added withQueryString(), the page links only had the page number, like /movies?page=2. So the controller only got page=2 and no search value. It thought there was no search and showed the full list, with the search box empty screenshot 12. 
 
-Q3: old() takes a second argument on your edit form. What would break if you left it out, and what would break if you used only it?
+Q3: A misspelled sort value does not break your page. Explain why that is worse than an error, and what your allowed list does about it.
 
-Answer: If I leave out the second argument, like old('title'), my edit form opens empty because it does not know the movie's values. If I use only $movie->title, then when I submit a wrong edit, the form shows the old movie values again and deletes what I typed. Using both, old('title', $movie->title), keeps what I typed after an error and shows the movie's values the first time.
+Answer: When the sort value is misspelled, like ?sort=titl, SQLite does not show an error. The page loads but nothing is sorted, so nobody notices or reports the problem, and on another database the same address could break the page. My allowed list checks the value against title, year and rating, and if it is not one of them, it uses title instead, so the list is always sorted correctly.

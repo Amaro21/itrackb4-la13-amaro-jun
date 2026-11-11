@@ -2,19 +2,9 @@
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-
-Route::get('/movies/featured', [MovieController::class, 'featured'])
-    ->name('movies.featured');
-
-Route::get('/movies/filter/{genre?}', function ($genre = 'all') {
-    return redirect()->route('movies.index', ['genre' => $genre]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/teachers/featured', [TeacherController::class, 'featured'])
     ->name('teachers.featured');
